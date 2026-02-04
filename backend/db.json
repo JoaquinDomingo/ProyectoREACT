@@ -1,56 +1,177 @@
 {
-    "videojuegos": [
-        {
-            "id": "1", "name": "Leyendas Pokemon Z-A", "descripcion" :"Leyendas Pokémon: Z-A es un videojuego de rol de acción para Nintendo Switch (lanzado en 2025) ambientado íntegramente en Ciudad Luminalia, región de Kalos, durante un plan de desarrollo urbanístico para humanos y Pokémon. Presenta un enfoque en exploración urbana, combates dinámicos en tiempo real, el regreso de las megaevoluciones y mecánicas de captura sigilosa tipo Arceus. ", 
-            "Fecha" : "16 de Octubre de 2026", "Compañia": "Nintendo", "Plataforma" :4,
-            "Categorias": [5,8,9], "Precio" : 59.99, "Imagen" :"https://nintenduo.com/wp-content/uploads/2025/05/Leyendas-Pokemon-ZA.webp",
-            "Video" : "https://www.youtube.com/watch?v=LJTIUly8FaQ"
-        },
-        {
-            "id": "2", "name": "Grand Theft Auto 6", "descripcion" :"Nuevo juego de la saga GTA", 
-            "Fecha" : "31 De Febrero de 1647", "Compañia": "Rockstar", "Plataforma" :2,
-            "Categorias": [1,2,6,8,10], "Precio" : 99.99, "Imagen" :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr8LCtehQGqqAitsrCaA1mwFQWOA91gmYeLQ&s",
-            "Video" : "https://www.youtube.com/watch?v=QdBZY2fkU-0"
-        },
-        {
-            "id": "3", "name": "The Legend Of Zelda", "descripcion" :"The Legend of Zelda: Tears of the Kingdom es una aclamada secuela de mundo abierto para Nintendo Switch que expande el universo de Breath of the Wild. Link explora Hyrule, islas flotantes y el subsuelo para combatir a Ganondorf. Destaca por sus mecánicas de construcción y físicas (Ultramano, Fusión) que permiten creatividad extrema. ", 
-            "Fecha" : "12 de Mayo de 2023", "Compañia": "Nintendo", "Plataforma" :4,
-            "Categorias": [1,2,8,9], "Precio" : 69.99, "Imagen" :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BbF7prZpNZlE0oFJy2RghFo8osAoRS0zA&s",
-            "Video" : "https://www.youtube.com/watch?v=gp9aY09li1s"
-        },
-        {
-            "id": "4", "name": "Hollow Knight: SilkSong", "descripcion" :"Hollow Knight: Silksong trata sobre la princesa Hornet, quien es secuestrada y llevada al reino desconocido de Farlum, donde debe ascender una misteriosa ciudadela para descubrir la verdad, escapar y enfrentar nuevas amenazas en una secuela del popular juego metroidvania, con una jugabilidad centrada en su agilidad y combate único", 
-            "Fecha" : "4 de Septiembre de 2025", "Compañia": "Cherry Games", "Plataforma" :[1,2,3,4,7],
-            "Categorias": [2,4,5,8,11], "Precio" : 20, "Imagen" :"https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/store/software/switch2/70010000105851/8787627be7f26ae7984456ffd9af17bea845032cebbf59fe6eeb596dea6bb20e",
-            "Video" : "https://www.youtube.com/watch?v=6XGeJwsUP9c"
-        },
-        {
-            "id": "5", "name": "Dragon Ball Legends", "descripcion" :"Dragon Ball Legends es un videojuego de lucha desarrollado por Dimps, para dispositivos móviles iOS y Android.​ Está basado en la franquicia Dragon Ball, creada por Akira Toriyama. Se lanzó en mayo de 2018.​", 
-            "Fecha" : "17 de Mayo de 2018", "Compañia": "Bandai Namco y Dimps", "Plataforma" :[1,5,6],
-            "Categorias": [2,5,6], "Precio" : 0, "Imagen" :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_Ozlbf6IXxrCnCpZ0nL-9vL-U3Mz3xC4YAw&s",
-            "Video" : "https://www.youtube.com/watch?v=sL1aH6exacA"
-        }
-    ], 
-    "categorias": [
-        {"id": "1", "name": "Shooter"},
-        {"id": "2", "name": "Lucha"},
-        {"id": "3", "name": "Arcade"},
-        {"id": "4", "name": "Plataformas"},
-        {"id": "5", "name": "Estrategia"},
-        {"id": "6", "name": "Simulación"},
-        {"id": "7", "name": "Deporte"},
-        {"id": "8", "name": "Aventura"},
-        {"id": "9", "name": "Rol"},
-        {"id": "10","name": "Educación"},
-        {"id": "11","name": "Puzzle"}    
-    ],
-    "plataforma": [
-        {"id": "1", "name": "PC"},
-        {"id": "2", "name": "PS5"},
-        {"id": "3", "name": "Xbox One"},
-        {"id": "4", "name": "Nintendo Switch"},
-        {"id": "5", "name": "Android"},
-        {"id": "6", "name": "IOS"},
-        {"id": "7", "name": "Otras"}
-    ]
+  "videojuegos": [
+    {
+      "id": "1",
+      "name": "Leyendas Pokemon Z-A",
+      "descripcion": "Leyendas Pokémon: Z-A es un videojuego de rol de acción para Nintendo Switch (lanzado en 2025) ambientado íntegramente en Ciudad Luminalia, región de Kalos, durante un plan de desarrollo urbanístico para humanos y Pokémon. Presenta un enfoque en exploración urbana, combates dinámicos en tiempo real, el regreso de las megaevoluciones y mecánicas de captura sigilosa tipo Arceus. ",
+      "Fecha": "16/10/2025",
+      "Compañia": "Nintendo",
+      "Plataforma": 4,
+      "Categorias": [
+        5,
+        8,
+        9
+      ],
+      "Precio": 59.99,
+      "Imagen": "https://nintenduo.com/wp-content/uploads/2025/05/Leyendas-Pokemon-ZA.webp",
+      "Video": "https://www.youtube.com/watch?v=LJTIUly8FaQ"
+    },
+    {
+      "name": "Grand Theft Auto 6",
+      "descripcion": "Nuevo juego de la saga GTA",
+      "Fecha": "31/02/1647",
+      "Compañia": "Rockstar",
+      "Precio": 99.99,
+      "Imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr8LCtehQGqqAitsrCaA1mwFQWOA91gmYeLQ&s",
+      "Video": "https://www.youtube.com/watch?v=QdBZY2fkU-0",
+      "Categorias": [
+        1,
+        2,
+        6,
+        8,
+        10
+      ],
+      "Plataforma": [
+        2
+      ],
+      "id": "2"
+    },
+    {
+      "id": "3",
+      "name": "The Legend Of Zelda",
+      "descripcion": "The Legend of Zelda: Tears of the Kingdom es una aclamada secuela de mundo abierto para Nintendo Switch que expande el universo de Breath of the Wild. Link explora Hyrule, islas flotantes y el subsuelo para combatir a Ganondorf. Destaca por sus mecánicas de construcción y físicas (Ultramano, Fusión) que permiten creatividad extrema. ",
+      "Fecha": "12/05/2023",
+      "Compañia": "Nintendo",
+      "Plataforma": 4,
+      "Categorias": [
+        1,
+        2,
+        8,
+        9
+      ],
+      "Precio": 69.99,
+      "Imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BbF7prZpNZlE0oFJy2RghFo8osAoRS0zA&s",
+      "Video": "https://www.youtube.com/watch?v=gp9aY09li1s"
+    },
+    {
+      "id": "4",
+      "name": "Hollow Knight: SilkSong",
+      "descripcion": "Hollow Knight: Silksong trata sobre la princesa Hornet, quien es secuestrada y llevada al reino desconocido de Farlum, donde debe ascender una misteriosa ciudadela para descubrir la verdad, escapar y enfrentar nuevas amenazas en una secuela del popular juego metroidvania, con una jugabilidad centrada en su agilidad y combate único",
+      "Fecha": "4/09/2025",
+      "Compañia": "Cherry Games",
+      "Plataforma": [
+        1,
+        2,
+        3,
+        4,
+        7
+      ],
+      "Categorias": [
+        2,
+        4,
+        5,
+        8,
+        11
+      ],
+      "Precio": 20,
+      "Imagen": "https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/store/software/switch2/70010000105851/8787627be7f26ae7984456ffd9af17bea845032cebbf59fe6eeb596dea6bb20e",
+      "Video": "https://www.youtube.com/watch?v=6XGeJwsUP9c"
+    },
+    {
+      "id": "5",
+      "name": "Dragon Ball Legends",
+      "descripcion": "Dragon Ball Legends es un videojuego de lucha desarrollado por Dimps, para dispositivos móviles iOS y Android.​ Está basado en la franquicia Dragon Ball, creada por Akira Toriyama. Se lanzó en mayo de 2018.​",
+      "Fecha": "17/05/2018",
+      "Compañia": "Bandai Namco y Dimps",
+      "Plataforma": [
+        1,
+        5,
+        6
+      ],
+      "Categorias": [
+        2,
+        5,
+        6
+      ],
+      "Precio": 0,
+      "Imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_Ozlbf6IXxrCnCpZ0nL-9vL-U3Mz3xC4YAw&s",
+      "Video": "https://www.youtube.com/watch?v=sL1aH6exacA"
+    }
+  ],
+  "categorias": [
+    {
+      "id": "1",
+      "name": "Shooter"
+    },
+    {
+      "id": "2",
+      "name": "Lucha"
+    },
+    {
+      "id": "3",
+      "name": "Arcade"
+    },
+    {
+      "id": "4",
+      "name": "Plataformas"
+    },
+    {
+      "id": "5",
+      "name": "Estrategia"
+    },
+    {
+      "id": "6",
+      "name": "Simulación"
+    },
+    {
+      "id": "7",
+      "name": "Deporte"
+    },
+    {
+      "id": "8",
+      "name": "Aventura"
+    },
+    {
+      "id": "9",
+      "name": "Rol"
+    },
+    {
+      "id": "10",
+      "name": "Educación"
+    },
+    {
+      "id": "11",
+      "name": "Puzzle"
+    }
+  ],
+  "plataforma": [
+    {
+      "id": "1",
+      "name": "PC"
+    },
+    {
+      "id": "2",
+      "name": "PS5"
+    },
+    {
+      "id": "3",
+      "name": "Xbox One"
+    },
+    {
+      "id": "4",
+      "name": "Nintendo Switch"
+    },
+    {
+      "id": "5",
+      "name": "Android"
+    },
+    {
+      "id": "6",
+      "name": "IOS"
+    },
+    {
+      "id": "7",
+      "name": "Otras"
+    }
+  ]
 }
