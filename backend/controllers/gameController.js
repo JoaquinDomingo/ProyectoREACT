@@ -77,6 +77,13 @@ const getGameById = (req, res) => {
         owner: owner ? owner.username : 'Unknown'
     };
 
+    if (enrichedGame.comments) {
+        enrichedGame.comments = enrichedGame.comments.map(c => {
+            const cOwner = db.users.find(u => u.id === c.userId);
+            return { ...c, authorName: cOwner ? cOwner.username : 'Unknown' };
+        });
+    }
+
     res.json(enrichedGame);
 };
 
@@ -199,4 +206,103 @@ const voteGame = (req, res) => {
     });
 };
 
-module.exports = { getAllGames, getMyGames, getGameById, createGame, updateGame, deleteGame, getCategories, getPlatforms, voteGame };
+const addComment = (req, res) => {
+    const { id } = req.params;
+    const { text } = req.body;
+    const userId = req.user.id;
+    const db = readData();
+
+    const gameIndex = db.games.findIndex(g => g.id === id);
+    if (gameIndex === -1) return res.status(404).json({ message: 'Game not found' });
+
+    const game = db.games[gameIndex];
+    if (!game.comments) game.comments = [];
+
+    const newComment = {
+        id: Date.now().toString(),
+        userId,
+        text,
+        date: new Date().toISOString(),
+        replies: []
+    };
+
+    game.comments.push(newComment);
+    db.games[gameIndex] = game;
+    saveData(db);
+
+    res.status(201).json(game.comments);
+};
+
+const deleteComment = (req, res) => {
+    const { id, commentId } = req.params;
+    const userId = req.user.id;
+    const userRole = req.user.role;
+    const db = readData();
+
+    const gameIndex = db.games.findIndex(g => g.id === id);
+    if (gameIndex === -1) return res.status(404).json({ message: 'Game not found' });
+
+    const game = db.games[gameIndex];
+    if (!game.comments) game.comments = [];
+
+    const commentIndex = game.comments.findIndex(c => c.id === commentId);
+    if (commentIndex === -1) return res.status(404).json({ message: 'Comment not found' });
+
+    const comment = game.comments[commentIndex];
+    const isOwner = comment.userId === userId;
+    const isAdmin = userRole === 'admin';
+    const hasReplies = comment.replies && comment.replies.length > 0;
+
+    if (isAdmin || (isOwner && !hasReplies)) {
+        game.comments.splice(commentIndex, 1);
+        db.games[gameIndex] = game;
+        saveData(db);
+        return res.json(game.comments);
+    } else {
+        return res.status(403).json({ message: 'No tienes permiso o el comentario tiene respuestas' });
+    }
+};
+
+const reportGame = (req, res) => {
+    const { id } = req.params;
+    const userId = req.user.id;
+    const db = readData();
+
+    const gameIndex = db.games.findIndex(g => g.id === id);
+    if (gameIndex === -1) return res.status(404).json({ message: 'Game not found' });
+
+    const game = db.games[gameIndex];
+    if (!game.reports) game.reports = [];
+
+    // Evitar multi reportes por el mismo usuario si se desea
+    if (!game.reports.includes(userId)) {
+        game.reports.push(userId);
+        db.games[gameIndex] = game;
+        saveData(db);
+    }
+
+    res.json({ message: 'Juego reportado exitosamente' });
+};
+
+const getReportedGames = (req, res) => {
+    const userRole = req.user.role;
+    if (userRole !== 'admin') {
+        return res.status(403).json({ message: 'Acceso denegado' });
+    }
+
+    const db = readData();
+    const reportedGames = db.games.filter(g => g.reports && g.reports.length > 0);
+
+    // Enrich with owner info
+    const enriched = reportedGames.map(game => {
+        const owner = db.users.find(u => u.id === game.userId);
+        return {
+            ...game,
+            owner: owner ? owner.username : 'Unknown'
+        };
+    });
+
+    res.json(enriched);
+};
+
+module.exports = { getAllGames, getMyGames, getGameById, createGame, updateGame, deleteGame, getCategories, getPlatforms, voteGame, addComment, deleteComment, reportGame, getReportedGames };

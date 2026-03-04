@@ -4,17 +4,20 @@ import api from '../context/api';
 import { useAuxData } from '../hooks/useAuxData';
 import { useAuth } from '../context/AuthContext';
 import Loading from '../components/Loading';
-import { Container, Grid, Typography, Button, Box, Chip, Card, CardMedia, CardContent, Divider, Link } from '@mui/material';
+import { Container, Grid, Typography, Button, Box, Chip, Card, CardMedia, CardContent, Divider, TextField, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Avatar, Paper } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VideocamIcon from '@mui/icons-material/Videocam';
+import SendIcon from '@mui/icons-material/Send';
 
 const GameDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
     const [game, setGame] = useState(null);
+    const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState("");
     const [loading, setLoading] = useState(true);
     const { categorias, plataformas } = useAuxData();
 
@@ -23,6 +26,7 @@ const GameDetails = () => {
             try {
                 const res = await api.get(`/games/${id}`);
                 setGame(res.data);
+                setComments(res.data.comments || []);
             } catch (error) {
                 console.error("Error fetching game details:", error);
                 alert("Error al cargar el juego o no existe.");
@@ -47,6 +51,35 @@ const GameDetails = () => {
         }
     };
 
+    const handleAddComment = async () => {
+        if (!newComment.trim() || !user) return;
+        try {
+            const res = await api.post(`/games/${id}/comments`, { text: newComment });
+            // El backend devuelve solo el array de comentarios (o podríamos recargar la página)
+            // Para simplificar, recargamos los datos para obtener los nombres de usuario actualizados,
+            // o actualizamos optimísticamente. Haremos una nueva llamada GET para mayor consistencia.
+            const updatedRes = await api.get(`/games/${id}`);
+            setComments(updatedRes.data.comments || []);
+            setNewComment("");
+        } catch (error) {
+            console.error("Error adding comment:", error);
+            alert("Error al añadir comentario");
+        }
+    };
+
+    const handleDeleteComment = async (commentId) => {
+        if (window.confirm("¿Seguro que quieres borrar este comentario?")) {
+            try {
+                await api.delete(`/games/${id}/comments/${commentId}`);
+                const updatedRes = await api.get(`/games/${id}`);
+                setComments(updatedRes.data.comments || []);
+            } catch (error) {
+                console.error("Error deleting comment:", error);
+                alert("Error al eliminar el comentario. Posiblemente no tienes permisos.");
+            }
+        }
+    };
+
     if (loading) return <Loading />;
     if (!game) return null;
 
@@ -55,6 +88,7 @@ const GameDetails = () => {
 
     const plats = Array.isArray(game.Plataforma) ? game.Plataforma : [game.Plataforma];
     const isOwner = user && game.userId === user.id;
+    const isAdmin = user && user.role === 'admin';
 
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -177,6 +211,100 @@ const GameDetails = () => {
                     </Card>
                 </Grid>
             </Grid>
+
+            {/* SECCIÓN DE COMENTARIOS */}
+            <Box sx={{ mt: 6 }}>
+                <Typography variant="h5" component="h2" gutterBottom fontWeight="bold">
+                    Comentarios ({comments.length})
+                </Typography>
+
+                <Paper elevation={0} sx={{ p: 3, mb: 4, backgroundColor: 'background.paper', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 2 }}>
+                    {user ? (
+                        <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
+                            <Avatar sx={{ bgcolor: 'primary.main', textTransform: 'uppercase' }}>
+                                {user.username.charAt(0)}
+                            </Avatar>
+                            <Box sx={{ flexGrow: 1 }}>
+                                <TextField
+                                    fullWidth
+                                    multiline
+                                    rows={3}
+                                    variant="outlined"
+                                    placeholder="Añade un comentario..."
+                                    value={newComment}
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                    sx={{ mb: 2 }}
+                                />
+                                <Button
+                                    variant="contained"
+                                    endIcon={<SendIcon />}
+                                    onClick={handleAddComment}
+                                    disabled={!newComment.trim()}
+                                >
+                                    Comentar
+                                </Button>
+                            </Box>
+                        </Box>
+                    ) : (
+                        <Typography color="text.secondary">
+                            Inicia sesión para dejar un comentario.
+                        </Typography>
+                    )}
+                </Paper>
+
+                <List sx={{ width: '100%', bgcolor: 'background.paper', borderRadius: 2, border: comments.length > 0 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                    {comments.length > 0 ? (
+                        comments.map((comment, index) => {
+                            const isCommentOwner = user && comment.userId === user.id;
+                            const hasReplies = comment.replies && comment.replies.length > 0;
+                            const canDelete = isAdmin || (isCommentOwner && !hasReplies);
+
+                            return (
+                                <React.Fragment key={comment.id}>
+                                    <ListItem alignItems="flex-start" sx={{ py: 2 }}>
+                                        <Box sx={{ mr: 2 }}>
+                                            <Avatar sx={{ width: 40, height: 40, bgcolor: 'secondary.main', textTransform: 'uppercase' }}>
+                                                {comment.authorName ? comment.authorName.charAt(0) : '?'}
+                                            </Avatar>
+                                        </Box>
+                                        <ListItemText
+                                            primary={
+                                                <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
+                                                    <Typography variant="subtitle1" fontWeight="bold">
+                                                        {comment.authorName}
+                                                    </Typography>
+                                                    <Typography variant="caption" color="text.secondary">
+                                                        {new Date(comment.date).toLocaleDateString()}
+                                                    </Typography>
+                                                </Box>
+                                            }
+                                            secondary={
+                                                <Typography variant="body1" sx={{ mt: 1, color: 'text.primary', whiteSpace: 'pre-wrap' }}>
+                                                    {comment.text}
+                                                </Typography>
+                                            }
+                                        />
+                                        {canDelete && (
+                                            <ListItemSecondaryAction>
+                                                <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteComment(comment.id)} color="error">
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </ListItemSecondaryAction>
+                                        )}
+                                    </ListItem>
+                                    {index < comments.length - 1 && <Divider component="li" />}
+                                </React.Fragment>
+                            );
+                        })
+                    ) : (
+                        <Box sx={{ p: 4, textAlign: 'center' }}>
+                            <Typography color="text.secondary">
+                                Sé el primero en comentar sobre este juego.
+                            </Typography>
+                        </Box>
+                    )}
+                </List>
+            </Box>
         </Container>
     );
 };
