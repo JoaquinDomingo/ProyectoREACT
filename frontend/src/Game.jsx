@@ -1,7 +1,35 @@
-import React from 'react';
-import { Card, CardActionArea, CardMedia, CardContent, Typography, Box, Chip } from '@mui/material';
+import React, { useState } from 'react';
+import { Card, CardActionArea, CardMedia, CardContent, Typography, Box, Chip, CardActions, IconButton, Tooltip } from '@mui/material';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
+import api from '../context/api';
+import { useAuth } from '../context/AuthContext';
 
 const Game = ({ game, onVerDetalle }) => {
+  const { user } = useAuth();
+
+  // Local state to optimistic UI updates
+  const [likes, setLikes] = useState(game.likes || []);
+  const [dislikes, setDislikes] = useState(game.dislikes || []);
+
+  const hasLiked = user && likes.includes(user.id);
+  const hasDisliked = user && dislikes.includes(user.id);
+
+  const handleVote = async (e, voteType) => {
+    e.stopPropagation(); // Avoid triggering CardActionArea
+    if (!user) return; // Must be logged in
+
+    try {
+      const res = await api.post(`/games/${game.id}/vote`, { voteType });
+      setLikes(res.data.likes);
+      setDislikes(res.data.dislikes);
+    } catch (error) {
+      console.error("Error al votar:", error);
+    }
+  };
+
   return (
     <Card
       sx={{
@@ -36,7 +64,6 @@ const Game = ({ game, onVerDetalle }) => {
               transition: 'transform 0.5s ease',
             }}
           />
-          {/* Subtle gradient overlay to make text pop if we ever place it on the image, and just looks premium */}
           <Box sx={{
             position: 'absolute',
             bottom: 0,
@@ -47,7 +74,7 @@ const Game = ({ game, onVerDetalle }) => {
             pointerEvents: 'none'
           }} />
         </Box>
-        <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 1.5, p: 2.5 }}>
+        <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 1.5, p: 2.5, pb: 0 }}>
           <Typography
             gutterBottom
             variant="h6"
@@ -79,6 +106,44 @@ const Game = ({ game, onVerDetalle }) => {
           </Box>
         </CardContent>
       </CardActionArea>
+
+      {/* Separated CardActions for Buttons to avoid click collision with ActionArea */}
+      <CardActions sx={{ px: 2.5, pb: 2, pt: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Tooltip title={user ? "Me gusta" : "Inicia sesión para votar"}>
+            <span>
+              <IconButton
+                size="small"
+                color={hasLiked ? "success" : "default"}
+                onClick={(e) => handleVote(e, hasLiked ? 'none' : 'like')}
+                disabled={!user}
+              >
+                {hasLiked ? <ThumbUpIcon fontSize="small" /> : <ThumbOutlinedIcon fontSize="small" />}
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Typography variant="body2" sx={{ fontWeight: 'bold', color: hasLiked ? 'success.main' : 'text.secondary' }}>
+            {likes.length}
+          </Typography>
+
+          <Tooltip title={user ? "No me gusta" : "Inicia sesión para votar"}>
+            <span>
+              <IconButton
+                size="small"
+                color={hasDisliked ? "error" : "default"}
+                onClick={(e) => handleVote(e, hasDisliked ? 'none' : 'dislike')}
+                disabled={!user}
+                sx={{ ml: 1 }}
+              >
+                {hasDisliked ? <ThumbDownIcon fontSize="small" /> : <ThumbDownOutlinedIcon fontSize="small" />}
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Typography variant="body2" sx={{ fontWeight: 'bold', color: hasDisliked ? 'error.main' : 'text.secondary' }}>
+            {dislikes.length}
+          </Typography>
+        </Box>
+      </CardActions>
     </Card>
   );
 };

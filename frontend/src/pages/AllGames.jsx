@@ -16,6 +16,7 @@ const AllGames = () => {
     // Filtros
     const [searchTerm, setSearchTerm] = useState("");
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
+    const [sortBy, setSortBy] = useState(""); // nuevo para ordenación
 
     // Paginación
     const [page, setPage] = useState(1);
@@ -26,8 +27,11 @@ const AllGames = () => {
         const fetchGames = async () => {
             setLoading(true);
             try {
-                // Se envía page y limit a la API
-                const res = await api.get(`/games?page=${page}&limit=${limit}`);
+                // Se envía page, limit y sort a la API
+                let query = `/games?page=${page}&limit=${limit}`;
+                if (sortBy) query += `&sort=${sortBy}`;
+
+                const res = await api.get(query);
                 setGames(res.data.data);
                 setTotalPages(res.data.totalPages);
             } catch (error) {
@@ -38,7 +42,7 @@ const AllGames = () => {
         };
 
         fetchGames();
-    }, [page, limit]);
+    }, [page, limit, sortBy]);
 
     const handleVerDetalle = (game) => {
         navigate(`/games/${game.id}`);
@@ -53,8 +57,12 @@ const AllGames = () => {
         setPage(1); // Volver a la página 1 cuando cambia el límite
     };
 
+    const handleSortChange = (event) => {
+        setSortBy(event.target.value);
+        setPage(1); // Volver a la página 1 cuando cambia orden
+    };
+
     // Filtros por lado del cliente sobre los juegos de la "página actual"
-    // (Idealmente también bajaría al backend si el dataset es grande, pero seguimos la lógica inicial)
     const gamesFiltrados = games.filter(g => {
         const cumpleNombre = g.name.toLowerCase().includes(searchTerm.toLowerCase());
         const cumpleCategoria = categoriaSeleccionada
@@ -88,15 +96,16 @@ const AllGames = () => {
             <Box
                 sx={{
                     display: 'flex',
-                    gap: 3,
+                    gap: 2,
                     mb: 4,
-                    flexDirection: { xs: 'column', md: 'row' },
+                    flexDirection: { xs: 'column', lg: 'row' },
                     alignItems: 'center',
                     backgroundColor: 'background.paper',
                     p: 3,
                     borderRadius: 3,
                     boxShadow: '0 4px 20px -5px rgba(0,0,0,0.3)',
-                    border: '1px solid rgba(255,255,255,0.05)'
+                    border: '1px solid rgba(255,255,255,0.05)',
+                    flexWrap: 'wrap'
                 }}
             >
                 <TextField
@@ -104,7 +113,7 @@ const AllGames = () => {
                     variant="outlined"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    sx={{ flexGrow: 1, width: '100%' }}
+                    sx={{ flexGrow: 1, minWidth: { xs: '100%', md: 200 } }}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -113,37 +122,54 @@ const AllGames = () => {
                         ),
                     }}
                 />
-                <FormControl sx={{ minWidth: { xs: '100%', md: 250 } }}>
-                    <InputLabel id="categoria-select-label">Filtrar por categoría</InputLabel>
-                    <Select
-                        labelId="categoria-select-label"
-                        id="categoria-select"
-                        value={categoriaSeleccionada}
-                        label="Filtrar por categoría"
-                        onChange={(e) => setCategoriaSeleccionada(e.target.value)}
-                    >
-                        <MenuItem value=""><em>Todas las categorías</em></MenuItem>
-                        {categorias.map(cat => (
-                            <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
 
-                <FormControl sx={{ minWidth: { xs: '100%', md: 150 } }}>
-                    <InputLabel id="limit-select-label">Juegos por página</InputLabel>
-                    <Select
-                        labelId="limit-select-label"
-                        id="limit-select"
-                        value={limit}
-                        label="Juegos por página"
-                        onChange={handleLimitChange}
-                    >
-                        <MenuItem value={4}>4</MenuItem>
-                        <MenuItem value={8}>8</MenuItem>
-                        <MenuItem value={12}>12</MenuItem>
-                        <MenuItem value={24}>24</MenuItem>
-                    </Select>
-                </FormControl>
+                <Box sx={{ display: 'flex', gap: 2, width: { xs: '100%', lg: 'auto' }, flexWrap: { xs: 'wrap', sm: 'nowrap' } }}>
+                    <FormControl sx={{ flexGrow: 1, minWidth: { xs: '100%', sm: 180 } }}>
+                        <InputLabel id="categoria-select-label">Filtrar por categoría</InputLabel>
+                        <Select
+                            labelId="categoria-select-label"
+                            id="categoria-select"
+                            value={categoriaSeleccionada}
+                            label="Filtrar por categoría"
+                            onChange={(e) => setCategoriaSeleccionada(e.target.value)}
+                        >
+                            <MenuItem value=""><em>Todas</em></MenuItem>
+                            {categorias.map(cat => (
+                                <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <FormControl sx={{ flexGrow: 1, minWidth: { xs: '100%', sm: 160 } }}>
+                        <InputLabel id="sort-select-label">Ordenar por</InputLabel>
+                        <Select
+                            labelId="sort-select-label"
+                            id="sort-select"
+                            value={sortBy}
+                            label="Ordenar por"
+                            onChange={handleSortChange}
+                        >
+                            <MenuItem value=""><em>Recientes</em></MenuItem>
+                            <MenuItem value="popular">Más Populares</MenuItem>
+                        </Select>
+                    </FormControl>
+
+                    <FormControl sx={{ minWidth: 100 }}>
+                        <InputLabel id="limit-select-label">Ver limit.</InputLabel>
+                        <Select
+                            labelId="limit-select-label"
+                            id="limit-select"
+                            value={limit}
+                            label="Ver limit."
+                            onChange={handleLimitChange}
+                        >
+                            <MenuItem value={4}>4</MenuItem>
+                            <MenuItem value={8}>8</MenuItem>
+                            <MenuItem value={12}>12</MenuItem>
+                            <MenuItem value={24}>24</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>
             </Box>
 
             {loading ? (

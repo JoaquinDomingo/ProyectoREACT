@@ -16,14 +16,30 @@ const getAllGames = (req, res) => {
     const db = readData();
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+    const sort = req.query.sort;
 
-    const enrichedGames = db.games.map(game => {
+    let enrichedGames = db.games.map(game => {
         const owner = db.users.find(user => user.id === game.userId);
+
+        // Ensure likes/dislikes arrays exist
+        const likes = game.likes || [];
+        const dislikes = game.dislikes || [];
+
         return {
             ...game,
+            likes,
+            dislikes,
             owner: owner ? owner.username : 'Unknown'
         };
     });
+
+    if (sort === 'popular') {
+        enrichedGames.sort((a, b) => {
+            const popularityA = a.likes.length - a.dislikes.length;
+            const popularityB = b.likes.length - b.dislikes.length;
+            return popularityB - popularityA; // Descending order
+        });
+    }
 
     const result = paginate(enrichedGames, page, limit);
     res.json(result);
@@ -147,4 +163,40 @@ const getPlatforms = (req, res) => {
     res.json(db.plataforma);
 };
 
-module.exports = { getAllGames, getMyGames, getGameById, createGame, updateGame, deleteGame, getCategories, getPlatforms };
+const voteGame = (req, res) => {
+    const { id } = req.params;
+    const { voteType } = req.body; // 'like' or 'dislike'
+    const userId = req.user.id;
+    const db = readData();
+
+    const gameIndex = db.games.findIndex(g => g.id === id);
+    if (gameIndex === -1) {
+        return res.status(404).json({ message: 'Game not found' });
+    }
+
+    const game = db.games[gameIndex];
+    if (!game.likes) game.likes = [];
+    if (!game.dislikes) game.dislikes = [];
+
+    // Remove user's previous vote if any
+    game.likes = game.likes.filter(uid => uid !== userId);
+    game.dislikes = game.dislikes.filter(uid => uid !== userId);
+
+    // Apply new vote
+    if (voteType === 'like') {
+        game.likes.push(userId);
+    } else if (voteType === 'dislike') {
+        game.dislikes.push(userId);
+    }
+    // If voteType is neither, we assume they are removing their vote.
+
+    db.games[gameIndex] = game;
+    saveData(db);
+
+    res.json({
+        likes: game.likes,
+        dislikes: game.dislikes
+    });
+};
+
+module.exports = { getAllGames, getMyGames, getGameById, createGame, updateGame, deleteGame, getCategories, getPlatforms, voteGame };
