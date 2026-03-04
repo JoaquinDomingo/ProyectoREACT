@@ -305,4 +305,69 @@ const getReportedGames = (req, res) => {
     res.json(enriched);
 };
 
-module.exports = { getAllGames, getMyGames, getGameById, createGame, updateGame, deleteGame, getCategories, getPlatforms, voteGame, addComment, deleteComment, reportGame, getReportedGames };
+const chatWithAssistant = async (req, res) => {
+    const { message } = req.body;
+    if (!message) return res.status(400).json({ error: 'El mensaje es obligatorio' });
+
+    const db = readData();
+    const catalogData = db.games.map(g => {
+        const catNames = g.Categorias ? g.Categorias.map(c => {
+            const cat = db.categorias.find(ct => String(ct.id) === String(c));
+            return cat ? cat.name : String(c);
+        }) : [];
+
+        const plats = Array.isArray(g.Plataforma) ? g.Plataforma : [g.Plataforma];
+        const platNames = plats.map(p => {
+            const plt = db.plataforma.find(pt => String(pt.id) === String(p));
+            return plt ? plt.name : String(p);
+        });
+
+        return {
+            nombre: g.name,
+            compañia: g.Compañia,
+            precio: `${g.Precio}€`,
+            categorias: catNames,
+            plataformas: platNames,
+            descripcion: g.descripcion
+        };
+    });
+
+    const systemPrompt = `Eres un asistente de inteligencia artificial llamado GameManager AI, experto en recomendar videojuegos.
+Tu trabajo es responder las consultas del usuario basándote ESTRICTAMENTE en el siguiente catálogo de juegos:
+
+${JSON.stringify(catalogData)}
+
+Reglas de comportamiento del asistente de IA:
+1. El asistente de IA debe limitarse a responder preguntas sobre los videojuegos que se encuentran en la base de datos actual proporcionada en el JSON anterior.
+2. Si el usuario pregunta por un juego que no está en el catálogo, indícale cordialmente que no lo tienes en tu catálogo y recomiéndale otras opciones similares que SÍ aparezcan en el JSON.
+3. Tus respuestas deben ser cordiales, estructuradas y fáciles de leer.
+
+La base de datos proporciona información de precio, categorías, nombre, compañía y descripción. Ayuda al usuario a decidir a qué jugar hoy.`;
+
+    try {
+        const response = await fetch('http://ollama:11434/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: 'lfm2.5-thinking',
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    { role: 'user', content: message }
+                ],
+                stream: false
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Ollama API error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        res.json({ response: data.message.content });
+    } catch (error) {
+        console.error('Error communicating with Ollama:', error);
+        res.status(500).json({ error: 'Asistente IA no disponible en este momento. Intenta de nuevo más tarde.' });
+    }
+};
+
+module.exports = { getAllGames, getMyGames, getGameById, createGame, updateGame, deleteGame, getCategories, getPlatforms, voteGame, addComment, deleteComment, reportGame, getReportedGames, chatWithAssistant };

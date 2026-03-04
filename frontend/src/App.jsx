@@ -10,6 +10,7 @@ import MyGames from './pages/MyGames';
 import GameDetails from './pages/GameDetails';
 import CreateEditGame from './pages/CreateEditGame';
 import AdminPanel from './pages/AdminPanel';
+import FloatingAssistant from './components/FloatingAssistant';
 import './App.css';
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
               <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>
           </div>
+          <FloatingAssistant />
         </div>
       </Router>
     </AuthProvider>

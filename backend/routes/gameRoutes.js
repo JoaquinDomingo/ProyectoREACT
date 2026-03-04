@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { getAllGames, getMyGames, getGameById, createGame, updateGame, deleteGame, getCategories, getPlatforms, voteGame, addComment, deleteComment, reportGame, getReportedGames } = require('../controllers/gameController');
+const { getAllGames, getMyGames, getGameById, createGame, updateGame, deleteGame, getCategories, getPlatforms, voteGame, addComment, deleteComment, reportGame, getReportedGames, chatWithAssistant } = require('../controllers/gameController');
 const authMiddleware = require('../middleware/authMiddleware');
 
 
 
+router.post('/chat', authMiddleware, chatWithAssistant);
 router.get('/', authMiddleware, getAllGames);
 router.get('/my-games', authMiddleware, getMyGames);
 router.get('/admin/reports', authMiddleware, getReportedGames);

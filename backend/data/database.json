@@ -29,6 +29,12 @@
       "username": "Jose",
       "password": "$2b$10$c91UXQmGsOlDDxK/D9.FveKWhzla7907vxCCSRD7JQ6rzmcR9yLWC",
       "role": "user"
+    },
+    {
+      "id": "1770888621746",
+      "username": "Joaquin",
+      "password": "$2b$10$FdAmTdtkwiPLIRKm2VVCpefAibjxKwGYfVQZVTUjG8bYm7EG3A7IC",
+      "role": "user"
     }
   ],
   "games": [
@@ -48,7 +54,11 @@
       ],
       "Precio": 59.99,
       "Imagen": "https://nintenduo.com/wp-content/uploads/2025/05/Leyendas-Pokemon-ZA.webp",
-      "Video": "https://www.youtube.com/watch?v=LJTIUly8FaQ"
+      "Video": "https://www.youtube.com/watch?v=LJTIUly8FaQ",
+      "likes": [
+        "1770888621746"
+      ],
+      "dislikes": []
     },
     {
       "id": "2",

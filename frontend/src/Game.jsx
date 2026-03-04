@@ -4,8 +4,8 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
-import api from '../context/api';
-import { useAuth } from '../context/AuthContext';
+import api from './context/api';
+import { useAuth } from './context/AuthContext';
 
 const Game = ({ game, onVerDetalle }) => {
   const { user } = useAuth();
