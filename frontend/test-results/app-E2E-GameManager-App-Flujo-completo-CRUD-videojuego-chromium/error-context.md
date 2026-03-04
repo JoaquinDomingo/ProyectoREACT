@@ -1,0 +1,191 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "GameManager" [ref=e6] [cursor=pointer]:
+        - /url: /games
+      - generic [ref=e7]:
+        - link "Todos los Juegos" [ref=e8] [cursor=pointer]:
+          - /url: /games
+        - link "Mis Juegos" [ref=e9] [cursor=pointer]:
+          - /url: /my-games
+        - link "Nuevo Juego" [active] [ref=e10] [cursor=pointer]:
+          - /url: /create-game
+          - text: Nuevo Juego
+        - paragraph [ref=e11]: Hola, testuser_1772642401990
+        - button "Cerrar Sesión" [ref=e12] [cursor=pointer]
+  - generic [ref=e14]:
+    - heading "Registrar Videojuego" [level=1] [ref=e16]
+    - generic [ref=e19]:
+      - generic [ref=e21]:
+        - generic:
+          - text: Nombre del Videojuego
+          - generic: "*"
+        - generic [ref=e22]:
+          - textbox "Nombre del Videojuego" [ref=e23]
+          - group:
+            - generic: Nombre del Videojuego *
+      - generic [ref=e25]:
+        - generic:
+          - text: Descripción
+          - generic: "*"
+        - generic [ref=e26]:
+          - textbox "Descripción" [ref=e27]
+          - group:
+            - generic: Descripción *
+      - generic [ref=e29]:
+        - generic: Fecha Lanzamiento (Ej. 2024)
+        - generic [ref=e30]:
+          - textbox "Fecha Lanzamiento (Ej. 2024)" [ref=e31]
+          - group:
+            - generic: Fecha Lanzamiento (Ej. 2024)
+      - generic [ref=e33]:
+        - generic: Compañía
+        - generic [ref=e34]:
+          - textbox "Compañía" [ref=e35]
+          - group:
+            - generic: Compañía
+      - generic [ref=e37]:
+        - generic: Precio (€)
+        - generic [ref=e38]:
+          - spinbutton "Precio (€)" [ref=e39]
+          - group:
+            - generic: Precio (€)
+      - generic [ref=e41]:
+        - generic: URL Imagen
+        - generic [ref=e42]:
+          - textbox "URL Imagen" [ref=e43]
+          - group:
+            - generic: URL Imagen
+      - generic [ref=e45]:
+        - generic: URL Video (Trailer)
+        - generic [ref=e46]:
+          - textbox "URL Video (Trailer)" [ref=e47]
+          - group:
+            - generic: URL Video (Trailer)
+      - generic [ref=e48]:
+        - separator [ref=e49]
+        - heading "Categorías" [level=6] [ref=e50]
+        - generic [ref=e51]:
+          - generic [ref=e52] [cursor=pointer]:
+            - generic [ref=e53]:
+              - checkbox "Shooter" [ref=e54]
+              - img [ref=e55]
+            - generic [ref=e57]: Shooter
+          - generic [ref=e58] [cursor=pointer]:
+            - generic [ref=e59]:
+              - checkbox "Lucha" [ref=e60]
+              - img [ref=e61]
+            - generic [ref=e63]: Lucha
+          - generic [ref=e64] [cursor=pointer]:
+            - generic [ref=e65]:
+              - checkbox "Arcade" [ref=e66]
+              - img [ref=e67]
+            - generic [ref=e69]: Arcade
+          - generic [ref=e70] [cursor=pointer]:
+            - generic [ref=e71]:
+              - checkbox "Plataformas" [ref=e72]
+              - img [ref=e73]
+            - generic [ref=e75]: Plataformas
+          - generic [ref=e76] [cursor=pointer]:
+            - generic [ref=e77]:
+              - checkbox "Estrategia" [ref=e78]
+              - img [ref=e79]
+            - generic [ref=e81]: Estrategia
+          - generic [ref=e82] [cursor=pointer]:
+            - generic [ref=e83]:
+              - checkbox "Simulación" [ref=e84]
+              - img [ref=e85]
+            - generic [ref=e87]: Simulación
+          - generic [ref=e88] [cursor=pointer]:
+            - generic [ref=e89]:
+              - checkbox "Deporte" [ref=e90]
+              - img [ref=e91]
+            - generic [ref=e93]: Deporte
+          - generic [ref=e94] [cursor=pointer]:
+            - generic [ref=e95]:
+              - checkbox "Aventura" [ref=e96]
+              - img [ref=e97]
+            - generic [ref=e99]: Aventura
+          - generic [ref=e100] [cursor=pointer]:
+            - generic [ref=e101]:
+              - checkbox "Rol" [ref=e102]
+              - img [ref=e103]
+            - generic [ref=e105]: Rol
+          - generic [ref=e106] [cursor=pointer]:
+            - generic [ref=e107]:
+              - checkbox "Educación" [ref=e108]
+              - img [ref=e109]
+            - generic [ref=e111]: Educación
+          - generic [ref=e112] [cursor=pointer]:
+            - generic [ref=e113]:
+              - checkbox "Puzzle" [ref=e114]
+              - img [ref=e115]
+            - generic [ref=e117]: Puzzle
+          - generic [ref=e118] [cursor=pointer]:
+            - generic [ref=e119]:
+              - checkbox "Terror" [ref=e120]
+              - img [ref=e121]
+            - generic [ref=e123]: Terror
+          - generic [ref=e124] [cursor=pointer]:
+            - generic [ref=e125]:
+              - checkbox "Mundo Abierto" [ref=e126]
+              - img [ref=e127]
+            - generic [ref=e129]: Mundo Abierto
+          - generic [ref=e130] [cursor=pointer]:
+            - generic [ref=e131]:
+              - checkbox "Sandbox" [ref=e132]
+              - img [ref=e133]
+            - generic [ref=e135]: Sandbox
+          - generic [ref=e136] [cursor=pointer]:
+            - generic [ref=e137]:
+              - checkbox "Supervivencia" [ref=e138]
+              - img [ref=e139]
+            - generic [ref=e141]: Supervivencia
+      - generic [ref=e142]:
+        - separator [ref=e143]
+        - heading "Plataformas" [level=6] [ref=e144]
+        - generic [ref=e145]:
+          - generic [ref=e146] [cursor=pointer]:
+            - generic [ref=e147]:
+              - checkbox "PC" [ref=e148]
+              - img [ref=e149]
+            - generic [ref=e151]: PC
+          - generic [ref=e152] [cursor=pointer]:
+            - generic [ref=e153]:
+              - checkbox "PS5" [ref=e154]
+              - img [ref=e155]
+            - generic [ref=e157]: PS5
+          - generic [ref=e158] [cursor=pointer]:
+            - generic [ref=e159]:
+              - checkbox "Xbox Series X" [ref=e160]
+              - img [ref=e161]
+            - generic [ref=e163]: Xbox Series X
+          - generic [ref=e164] [cursor=pointer]:
+            - generic [ref=e165]:
+              - checkbox "Nintendo Switch" [ref=e166]
+              - img [ref=e167]
+            - generic [ref=e169]: Nintendo Switch
+          - generic [ref=e170] [cursor=pointer]:
+            - generic [ref=e171]:
+              - checkbox "Android" [ref=e172]
+              - img [ref=e173]
+            - generic [ref=e175]: Android
+          - generic [ref=e176] [cursor=pointer]:
+            - generic [ref=e177]:
+              - checkbox "IOS" [ref=e178]
+              - img [ref=e179]
+            - generic [ref=e181]: IOS
+          - generic [ref=e182] [cursor=pointer]:
+            - generic [ref=e183]:
+              - checkbox "Otras" [ref=e184]
+              - img [ref=e185]
+            - generic [ref=e187]: Otras
+      - generic [ref=e189]:
+        - button "Cancelar" [ref=e190] [cursor=pointer]
+        - button "Guardar Videojuego" [ref=e191] [cursor=pointer]
+  - button "chat" [ref=e192] [cursor=pointer]:
+    - img [ref=e193]
+```

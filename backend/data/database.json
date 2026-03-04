@@ -35,6 +35,12 @@
       "username": "Joaquin",
       "password": "$2b$10$FdAmTdtkwiPLIRKm2VVCpefAibjxKwGYfVQZVTUjG8bYm7EG3A7IC",
       "role": "user"
+    },
+    {
+      "id": "1772642405997",
+      "username": "testuser_1772642401990",
+      "password": "$2b$10$XkVApkWKByVDodc1GbrKNeK/tGuagaWB8/2o9.paXRpzwZVKa/iPa",
+      "role": "user"
     }
   ],
   "games": [
@@ -99,7 +105,20 @@
       ],
       "Precio": 69.99,
       "Imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BbF7prZpNZlE0oFJy2RghFo8osAoRS0zA&s",
-      "Video": "https://www.youtube.com/watch?v=gp9aY09li1s"
+      "Video": "https://www.youtube.com/watch?v=gp9aY09li1s",
+      "comments": [
+        {
+          "id": "1772641703429",
+          "userId": "1770888621746",
+          "text": "Muy buen juego",
+          "date": "2026-03-04T16:28:23.429Z",
+          "replies": []
+        }
+      ],
+      "likes": [
+        "1770888621746"
+      ],
+      "dislikes": []
     },
     {
       "id": "4",
