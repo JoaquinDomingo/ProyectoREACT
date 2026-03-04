@@ -4,12 +4,13 @@ import api from '../context/api';
 import { useAuxData } from '../hooks/useAuxData';
 import { useAuth } from '../context/AuthContext';
 import Loading from '../components/Loading';
-import { Container, Grid, Typography, Button, Box, Chip, Card, CardMedia, CardContent, Divider, TextField, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Avatar, Paper } from '@mui/material';
+import { Container, Grid, Typography, Button, Box, Chip, Card, CardMedia, CardContent, Divider, TextField, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Avatar, Paper, Tooltip } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import SendIcon from '@mui/icons-material/Send';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 
 const GameDetails = () => {
     const { id } = useParams();
@@ -51,13 +52,26 @@ const GameDetails = () => {
         }
     };
 
+    const handleReport = async () => {
+        if (!user) {
+            alert('Debes iniciar sesión para reportar un juego.');
+            return;
+        }
+        if (window.confirm('¿Estás seguro de que quieres reportar este juego como inapropiado?')) {
+            try {
+                await api.post(`/games/${id}/report`);
+                alert('Juego reportado exitosamente. Un administrador lo revisará.');
+            } catch (error) {
+                console.error("Error reporting game:", error);
+                alert("Error al reportar el juego");
+            }
+        }
+    };
+
     const handleAddComment = async () => {
         if (!newComment.trim() || !user) return;
         try {
             const res = await api.post(`/games/${id}/comments`, { text: newComment });
-            // El backend devuelve solo el array de comentarios (o podríamos recargar la página)
-            // Para simplificar, recargamos los datos para obtener los nombres de usuario actualizados,
-            // o actualizamos optimísticamente. Haremos una nueva llamada GET para mayor consistencia.
             const updatedRes = await api.get(`/games/${id}`);
             setComments(updatedRes.data.comments || []);
             setNewComment("");
@@ -75,7 +89,7 @@ const GameDetails = () => {
                 setComments(updatedRes.data.comments || []);
             } catch (error) {
                 console.error("Error deleting comment:", error);
-                alert("Error al eliminar el comentario. Posiblemente no tienes permisos.");
+                alert("Error al eliminar el comentario. Posiblemente no tienes permisos o el comentario tiene respuestas.");
             }
         }
     };
@@ -92,16 +106,28 @@ const GameDetails = () => {
 
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
-            <Button
-                startIcon={<ArrowBackIcon />}
-                onClick={() => navigate(-1)}
-                sx={{ mb: 3 }}
-                color="inherit"
-            >
-                Volver
-            </Button>
-
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Button
+                    startIcon={<ArrowBackIcon />}
+                    onClick={() => navigate(-1)}
+                    color="inherit"
+                >
+                    Volver
+                </Button>
+
+                <Tooltip title="Reportar contenido inapropiado">
+                    <Button
+                        color="warning"
+                        variant="text"
+                        startIcon={<ReportProblemIcon />}
+                        onClick={handleReport}
+                    >
+                        Reportar
+                    </Button>
+                </Tooltip>
+            </Box>
+
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
                 <Typography variant="h3" component="h1" fontWeight="bold">
                     {game.name}
                 </Typography>

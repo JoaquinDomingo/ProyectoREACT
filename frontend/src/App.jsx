@@ -9,6 +9,7 @@ import AllGames from './pages/AllGames';
 import MyGames from './pages/MyGames';
 import GameDetails from './pages/GameDetails';
 import CreateEditGame from './pages/CreateEditGame';
+import AdminPanel from './pages/AdminPanel';
 import './App.css';
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
                 <Route path="/create-game" element={<CreateEditGame />} />
                 <Route path="/edit-game/:id" element={<CreateEditGame />} />
                 <Route path="/games/:id" element={<GameDetails />} />
+                <Route path="/admin" element={<AdminPanel />} />
 
                 {/* Default Redirect */}
                 <Route path="/" element={<Navigate to="/games" replace />} />

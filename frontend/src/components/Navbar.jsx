@@ -36,6 +36,11 @@ const Navbar = () => {
                     <Button color="inherit" component={Link} to="/create-game">
                         Nuevo Juego
                     </Button>
+                    {user.role === 'admin' && (
+                        <Button color="warning" variant="outlined" component={Link} to="/admin" sx={{ fontWeight: 'bold' }}>
+                            Panel Admin
+                        </Button>
+                    )}
                     <Typography variant="body1" sx={{ ml: 2, mr: 2 }}>
                         Hola, {user.username}
                     </Typography>
