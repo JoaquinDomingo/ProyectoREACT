@@ -4,7 +4,7 @@ import GameList from '../GameList';
 import { useAuxData } from '../hooks/useAuxData';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../components/Loading';
-import { Container, Typography, TextField, FormControl, InputLabel, Select, MenuItem, Box, InputAdornment } from '@mui/material';
+import { Container, Typography, TextField, FormControl, InputLabel, Select, MenuItem, Box, InputAdornment, Pagination } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 const AllGames = () => {
@@ -12,14 +12,24 @@ const AllGames = () => {
     const [loading, setLoading] = useState(true);
     const { categorias, plataformas } = useAuxData();
     const navigate = useNavigate();
+
+    // Filtros
     const [searchTerm, setSearchTerm] = useState("");
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
 
+    // Paginación
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(8);
+    const [totalPages, setTotalPages] = useState(1);
+
     useEffect(() => {
         const fetchGames = async () => {
+            setLoading(true);
             try {
-                const res = await api.get('/games?limit=100');
+                // Se envía page y limit a la API
+                const res = await api.get(`/games?page=${page}&limit=${limit}`);
                 setGames(res.data.data);
+                setTotalPages(res.data.totalPages);
             } catch (error) {
                 console.error("Error fetching games:", error);
             } finally {
@@ -28,12 +38,23 @@ const AllGames = () => {
         };
 
         fetchGames();
-    }, []);
+    }, [page, limit]);
 
     const handleVerDetalle = (game) => {
         navigate(`/games/${game.id}`);
     };
 
+    const handlePageChange = (event, value) => {
+        setPage(value);
+    };
+
+    const handleLimitChange = (event) => {
+        setLimit(event.target.value);
+        setPage(1); // Volver a la página 1 cuando cambia el límite
+    };
+
+    // Filtros por lado del cliente sobre los juegos de la "página actual"
+    // (Idealmente también bajaría al backend si el dataset es grande, pero seguimos la lógica inicial)
     const gamesFiltrados = games.filter(g => {
         const cumpleNombre = g.name.toLowerCase().includes(searchTerm.toLowerCase());
         const cumpleCategoria = categoriaSeleccionada
@@ -41,8 +62,6 @@ const AllGames = () => {
             : true;
         return cumpleNombre && cumpleCategoria;
     });
-
-    if (loading) return <Loading />;
 
     return (
         <Container maxWidth="xl" sx={{ py: 6 }}>
@@ -109,19 +128,52 @@ const AllGames = () => {
                         ))}
                     </Select>
                 </FormControl>
+
+                <FormControl sx={{ minWidth: { xs: '100%', md: 150 } }}>
+                    <InputLabel id="limit-select-label">Juegos por página</InputLabel>
+                    <Select
+                        labelId="limit-select-label"
+                        id="limit-select"
+                        value={limit}
+                        label="Juegos por página"
+                        onChange={handleLimitChange}
+                    >
+                        <MenuItem value={4}>4</MenuItem>
+                        <MenuItem value={8}>8</MenuItem>
+                        <MenuItem value={12}>12</MenuItem>
+                        <MenuItem value={24}>24</MenuItem>
+                    </Select>
+                </FormControl>
             </Box>
 
-            {gamesFiltrados.length === 0 ? (
+            {loading ? (
+                <Loading />
+            ) : gamesFiltrados.length === 0 ? (
                 <Box sx={{ textAlign: 'center', py: 8 }}>
                     <Typography variant="h6" color="text.secondary">
-                        No se encontraron juegos que coincidan con tu búsqueda.
+                        No se encontraron juegos que coincidan con tu búsqueda en esta página.
                     </Typography>
                 </Box>
             ) : (
-                <GameList
-                    games={gamesFiltrados}
-                    onVerDetalle={handleVerDetalle}
-                />
+                <>
+                    <GameList
+                        games={gamesFiltrados}
+                        onVerDetalle={handleVerDetalle}
+                    />
+
+                    {/* Controles de Paginación */}
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
+                        <Pagination
+                            count={totalPages}
+                            page={page}
+                            onChange={handlePageChange}
+                            color="primary"
+                            size="large"
+                            showFirstButton
+                            showLastButton
+                        />
+                    </Box>
+                </>
             )}
         </Container>
     );
