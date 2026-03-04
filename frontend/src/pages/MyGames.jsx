@@ -3,6 +3,7 @@ import api from '../context/api';
 import GameList from '../GameList';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../components/Loading';
+import { Container, Typography } from '@mui/material';
 
 const MyGames = () => {
     const [games, setGames] = useState([]);
@@ -31,17 +32,21 @@ const MyGames = () => {
     if (loading) return <Loading />;
 
     return (
-        <div className="section-container">
-            <h2>Mis Videojuegos</h2>
+        <Container maxWidth="lg" sx={{ py: 4 }}>
+            <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
+                Mis Videojuegos
+            </Typography>
             {games.length === 0 ? (
-                <p>No tienes videojuegos registrados.</p>
+                <Typography variant="body1" color="text.secondary">
+                    No tienes videojuegos registrados.
+                </Typography>
             ) : (
                 <GameList
                     games={games}
                     onVerDetalle={handleVerDetalle}
                 />
             )}
-        </div>
+        </Container>
     );
 };
 

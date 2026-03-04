@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import api from '../context/api';
 import GameForm from '../GameForm';
 import { useAuxData } from '../hooks/useAuxData';
+import { Container, Box, Typography, CircularProgress } from '@mui/material';
 
 const CreateEditGame = () => {
     const { id } = useParams();
@@ -49,10 +50,21 @@ const CreateEditGame = () => {
         navigate(-1);
     };
 
-    if (loading) return <div>Cargando...</div>;
+    if (loading) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
+                <CircularProgress />
+            </Box>
+        );
+    }
 
     return (
-        <div className="section-container">
+        <Container maxWidth="md" sx={{ py: 4 }}>
+            <Box sx={{ mb: 4 }}>
+                <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
+                    {id ? 'Editar Videojuego' : 'Registrar Videojuego'}
+                </Typography>
+            </Box>
             <GameForm
                 game={gameToEdit}
                 onSave={handleSave}
@@ -60,7 +72,7 @@ const CreateEditGame = () => {
                 categoriasDisponibles={categorias}
                 plataformasDisponibles={plataformas}
             />
-        </div>
+        </Container>
     );
 };
 

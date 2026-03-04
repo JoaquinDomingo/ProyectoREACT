@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { Box, TextField, Button, Typography, FormGroup, FormControlLabel, Checkbox, Grid, Paper, Divider } from "@mui/material";
 
-const GameForm = ({game, onSave, onCancel, categoriasDisponibles, plataformasDisponibles}) => {
+const GameForm = ({ game, onSave, onCancel, categoriasDisponibles, plataformasDisponibles }) => {
     const [name, setName] = useState('')
     const [descripcion, setDescription] = useState('')
     const [fecha, setFecha] = useState('')
@@ -8,7 +9,7 @@ const GameForm = ({game, onSave, onCancel, categoriasDisponibles, plataformasDis
     const [precio, setPrecio] = useState('')
     const [imagen, setImagen] = useState('')
     const [video, setVideo] = useState('')
-    
+
     const [misCategorias, setMisCategorias] = useState([]);
     const [misPlataformas, setMisPlataformas] = useState([]);
 
@@ -38,20 +39,20 @@ const GameForm = ({game, onSave, onCancel, categoriasDisponibles, plataformasDis
 
     const handleToggle = (id, lista, setLista) => {
         const numId = parseInt(id);
-        lista.includes(numId) 
-            ? setLista(lista.filter(i => i !== numId)) 
+        lista.includes(numId)
+            ? setLista(lista.filter(i => i !== numId))
             : setLista([...lista, numId]);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault()
         onSave({
-            name, 
-            descripcion, 
-            Fecha: fecha, 
-            Compañia: compania, 
-            Precio: parseFloat(precio), 
-            Imagen: imagen, 
+            name,
+            descripcion,
+            Fecha: fecha,
+            Compañia: compania,
+            Precio: parseFloat(precio),
+            Imagen: imagen,
             Video: video,
             Categorias: misCategorias,
             Plataforma: misPlataformas
@@ -59,63 +60,137 @@ const GameForm = ({game, onSave, onCancel, categoriasDisponibles, plataformasDis
     }
 
     return (
-        <form onSubmit={handleSubmit} className="game-form">
-            <h3>{game ? "Editar Videojuego" : "Añadir Nuevo Videojuego"}</h3>
-            
-            <div className="form-group">
-                <label>Nombre:</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+        <Paper elevation={3} sx={{ p: 4 }}>
+            <Box component="form" onSubmit={handleSubmit} noValidate>
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <TextField
+                            required
+                            fullWidth
+                            label="Nombre del Videojuego"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </Grid>
 
-                <label>Descripción:</label>
-                <textarea value={descripcion} onChange={(e) => setDescription(e.target.value)} required />
+                    <Grid item xs={12}>
+                        <TextField
+                            required
+                            fullWidth
+                            multiline
+                            rows={4}
+                            label="Descripción"
+                            value={descripcion}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
+                    </Grid>
 
-                <label>Fecha Lanzamiento:</label>
-                <input type="text" value={fecha} onChange={(e) => setFecha(e.target.value)} />
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            label="Fecha Lanzamiento (Ej. 2024)"
+                            value={fecha}
+                            onChange={(e) => setFecha(e.target.value)}
+                        />
+                    </Grid>
 
-                <label>Compañía:</label>
-                <input type="text" value={compania} onChange={(e) => setCompania(e.target.value)} />
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            label="Compañía"
+                            value={compania}
+                            onChange={(e) => setCompania(e.target.value)}
+                        />
+                    </Grid>
 
-                <label>Precio (€):</label>
-                <input type="number" step="0.01" value={precio} onChange={(e) => setPrecio(e.target.value)} />
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            label="Precio (€)"
+                            type="number"
+                            inputProps={{ step: "0.01" }}
+                            value={precio}
+                            onChange={(e) => setPrecio(e.target.value)}
+                        />
+                    </Grid>
 
-                <label>URL Imagen:</label>
-                <input type="text" value={imagen} onChange={(e) => setImagen(e.target.value)} />
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            label="URL Imagen"
+                            value={imagen}
+                            onChange={(e) => setImagen(e.target.value)}
+                        />
+                    </Grid>
 
-                <label>URL Video:</label>
-                <input type="text" value={video} onChange={(e) => setVideo(e.target.value)} />
-            </div>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label="URL Video (Trailer)"
+                            value={video}
+                            onChange={(e) => setVideo(e.target.value)}
+                        />
+                    </Grid>
 
-            <div className="form-selection">
-                <h4>Categorías</h4>
-                {categoriasDisponibles && categoriasDisponibles.map(cat => (
-                  <label key={cat.id}>
-                    <input 
-                      type="checkbox" 
-                      checked={misCategorias.includes(parseInt(cat.id))} 
-                      onChange={() => handleToggle(cat.id, misCategorias, setMisCategorias)} 
-                    /> {cat.name}
-                  </label>
-                ))}
-            </div>
+                    <Grid item xs={12}>
+                        <Divider sx={{ my: 2 }} />
+                        <Typography variant="h6" gutterBottom>Categorías</Typography>
+                        <FormGroup row>
+                            {categoriasDisponibles && categoriasDisponibles.map(cat => (
+                                <FormControlLabel
+                                    key={cat.id}
+                                    control={
+                                        <Checkbox
+                                            checked={misCategorias.includes(parseInt(cat.id))}
+                                            onChange={() => handleToggle(cat.id, misCategorias, setMisCategorias)}
+                                        />
+                                    }
+                                    label={cat.name}
+                                />
+                            ))}
+                        </FormGroup>
+                    </Grid>
 
-            <div className="form-selection">
-                <h4>Plataformas</h4>
-                {plataformasDisponibles && plataformasDisponibles.map(plat => (
-                  <label key={plat.id}>
-                    <input 
-                      type="checkbox" 
-                      checked={misPlataformas.includes(parseInt(plat.id))} 
-                      onChange={() => handleToggle(plat.id, misPlataformas, setMisPlataformas)} 
-                    /> {plat.name}
-                  </label>
-                ))}
-            </div>
+                    <Grid item xs={12}>
+                        <Divider sx={{ my: 2 }} />
+                        <Typography variant="h6" gutterBottom>Plataformas</Typography>
+                        <FormGroup row>
+                            {plataformasDisponibles && plataformasDisponibles.map(plat => (
+                                <FormControlLabel
+                                    key={plat.id}
+                                    control={
+                                        <Checkbox
+                                            checked={misPlataformas.includes(parseInt(plat.id))}
+                                            onChange={() => handleToggle(plat.id, misPlataformas, setMisPlataformas)}
+                                        />
+                                    }
+                                    label={plat.name}
+                                />
+                            ))}
+                        </FormGroup>
+                    </Grid>
 
-            <div className="form-buttons">
-                <button type="submit">Guardar Videojuego</button>
-                <button type="button" onClick={onCancel}>Cancelar</button>
-            </div>
-        </form>
+                    <Grid item xs={12}>
+                        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mt: 2 }}>
+                            <Button
+                                variant="outlined"
+                                color="inherit"
+                                onClick={onCancel}
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                            >
+                                Guardar Videojuego
+                            </Button>
+                        </Box>
+                    </Grid>
+                </Grid>
+            </Box>
+        </Paper>
     )
 }
 

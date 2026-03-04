@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
@@ -14,18 +15,36 @@ const Navbar = () => {
     if (!user) return null;
 
     return (
-        <nav className="navbar">
-            <div className="navbar-brand">
-                <Link to="/games">GameManager</Link>
-            </div>
-            <div className="navbar-links">
-                <Link to="/games">Todos los Juegos</Link>
-                <Link to="/my-games">Mis Juegos</Link>
-                <Link to="/create-game">Nuevo Juego</Link>
-                <span className="user-welcome">Hola, {user.username}</span>
-                <button onClick={handleLogout} className="btn-logout">Cerrar Sesión</button>
-            </div>
-        </nav>
+        <AppBar position="static">
+            <Toolbar>
+                <Typography
+                    variant="h6"
+                    component={Link}
+                    to="/games"
+                    sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit', fontWeight: 'bold' }}
+                >
+                    GameManager
+                </Typography>
+
+                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Button color="inherit" component={Link} to="/games">
+                        Todos los Juegos
+                    </Button>
+                    <Button color="inherit" component={Link} to="/my-games">
+                        Mis Juegos
+                    </Button>
+                    <Button color="inherit" component={Link} to="/create-game">
+                        Nuevo Juego
+                    </Button>
+                    <Typography variant="body1" sx={{ ml: 2, mr: 2 }}>
+                        Hola, {user.username}
+                    </Typography>
+                    <Button variant="outlined" color="inherit" onClick={handleLogout}>
+                        Cerrar Sesión
+                    </Button>
+                </Box>
+            </Toolbar>
+        </AppBar>
     );
 };
 
